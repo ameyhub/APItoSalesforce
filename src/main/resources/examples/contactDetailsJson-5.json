@@ -1,0 +1,15 @@
+[{
+"FirstName": "John",
+"LastName": "Right",
+"AccountNumber": "8569685745",
+"emailAddress": "John.Right@gmail.com",
+"MobileNo": "9868695003",
+"Address": {
+	"City":"Nagpur",
+	"Street":"shivaji nagar",
+	"country":"india"
+}
+}
+]
+
+

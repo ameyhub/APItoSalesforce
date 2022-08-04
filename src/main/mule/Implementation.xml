@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="b4313533-1e0b-4c4b-b23c-5eea4a63eabb" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="ImplementationFlow" doc:id="955afd0a-4c6b-426d-b009-7bc0426e2add" >
+		<http:listener doc:name="HTTP /POST" doc:id="107deea2-e586-498d-9b4d-533cd14eec98" config-ref="HTTP_Listener_config" path="/test22"/>
+		<logger level="INFO" doc:name="printing payload" doc:id="5cbde8f1-f4ec-46c3-b0f6-2a5f419594dd" message="#[payload]"/>
+		<set-payload value='#[payload]' doc:name="Set Payload" doc:id="08b55fde-5995-4098-9a57-fa909a959403" />
+	</flow>
+</mule>

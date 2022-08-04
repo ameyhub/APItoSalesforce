@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<salesforce:sfdc-config name="Salesforce_Config" doc:name="Salesforce Config" doc:id="f3cafc11-dfee-4dcf-9250-69e9d62db48a" >
+		<salesforce:basic-connection username="amey.didolkar@perficient.com" password="LsdQwaszx12!@" securityToken="TELfSpr77DwnxY12hYzL8MBUF" />
+	</salesforce:sfdc-config>
+	<flow name="SalesforcePOCFlow" doc:id="a7f87d61-187a-407b-bd9c-dcf3df2c8e39" >
+		<http:listener doc:name="Listener" doc:id="b38707d2-abd9-4adf-b6ea-a06c8c444bf2" config-ref="HTTP_Listener_config" path="/salesforceContact"/>
+		<logger level="INFO" doc:name="Transforming message" doc:id="fe18b9db-92f5-468a-9e10-ae8183d2170a" message="Moving to transform"/>
+		<ee:transform doc:name="Transform Message" doc:id="6780282c-feb7-4722-9111-98e8bbf52d6c" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	Name: (payload01.FirstNamedefault "") ++ payload01.LastName,
+	BillingStreet: payload01.Address.Street,
+	BillingCity: payload01.Address.City,
+	BillingCountry: payload01.Address.country,
+	Phone: payload01.MobileNo,
+	AccountNumber: payload01.AccountNumber
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Salesforce Account is accessable" doc:id="64589367-4fbd-4c46-9642-9b1fd01e19d9" message='"Successfully moving to salesforce"'/>
+		<salesforce:create doc:name="Create" doc:id="5a6e2573-bc5a-48da-9351-910f4af78e25" config-ref="Salesforce_Config" type="Account"/>
+		<logger level="INFO" doc:name="successfull transfer data" doc:id="783a4990-4d48-4641-ab2c-16669ddadc91" message='"Successfully Data Transfer"'/>
+		<ee:transform doc:name="Transform Message" doc:id="a38d88b3-4ed9-439c-abc9-570e8895cac0">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Successfully Completed" doc:id="6daf3267-4287-4adf-971e-f20fe976638d" message='"Successfully Completed"'/>
+	</flow>
+</mule>
